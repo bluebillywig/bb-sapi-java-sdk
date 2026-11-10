@@ -1,0 +1,15 @@
+target/
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+.factorypath
+nbproject/
+out/
+.DS_Store
+hs_err_pid*
+dependency-reduced-pom.xml
