@@ -1,0 +1,68 @@
+name: Publish to Maven Central
+on:
+  # Normal path: create-release.yaml starts this run for the new tag. The release trigger covers a
+  # release published by hand in the GitHub UI.
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish (v{x}.{y}.{z})"
+        required: true
+        type: string
+
+# Secrets on this repo (create them with scripts/set-release-secrets.sh):
+#   MAVEN_CENTRAL_USERNAME / MAVEN_CENTRAL_PASSWORD  Central Portal user token
+#   MAVEN_GPG_PRIVATE_KEY                            ASCII-armored GPG private key
+#   MAVEN_GPG_PASSPHRASE                             its passphrase
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      - name: Validate release tag
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo "::error::Release tag is not v{x}.{y}.{z}"
+            exit 1
+          fi
+          echo "RELEASE_VERSION=${BASH_REMATCH[1]}" >>"$GITHUB_ENV"
+
+      - name: Checkout the release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          server-id: central
+          server-username: MAVEN_CENTRAL_USERNAME
+          server-password: MAVEN_CENTRAL_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Set version from tag
+        run: |
+          # The first <version> in pom.xml is the project version (see the comment there).
+          sed -i "0,/<version>[^<]*<\/version>/s//<version>${RELEASE_VERSION}<\/version>/" pom.xml
+          grep -m1 "<version>${RELEASE_VERSION}</version>" pom.xml
+
+      - name: Build, sign and upload to the Central Portal
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: mvn -B -P release deploy
+
+      # The deployment is now validated on central.sonatype.com but not public:
+      # release it there by hand (autoPublish=false in pom.xml).
+      - name: Next step
+        run: echo "::notice::Deployment ${RELEASE_VERSION} validated; publish it at https://central.sonatype.com/publishing/deployments"

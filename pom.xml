@@ -6,23 +6,48 @@
 
   <groupId>com.bluebillywig</groupId>
   <artifactId>bb-sapi-java-sdk</artifactId>
-  <version>1.0.0</version>
+  <!-- Development version. The release workflow (publish.yaml) replaces it with the
+       version from the release tag before deploying; keep it the first <version> in this file. -->
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Blue Billywig SAPI Java SDK</name>
   <description>Blue Billywig Server API (SAPI) SDK for Java</description>
   <url>https://github.com/bluebillywig/bb-sapi-java-sdk</url>
+  <inceptionYear>2026</inceptionYear>
+
+  <organization>
+    <name>Blue Billywig</name>
+    <url>https://www.bluebillywig.com</url>
+  </organization>
 
   <licenses>
     <license>
       <name>MIT License</name>
       <url>https://opensource.org/licenses/MIT</url>
+      <distribution>repo</distribution>
     </license>
   </licenses>
 
+  <developers>
+    <developer>
+      <id>bluebillywig</id>
+      <name>Blue Billywig</name>
+      <organization>Blue Billywig</organization>
+      <organizationUrl>https://www.bluebillywig.com</organizationUrl>
+    </developer>
+  </developers>
+
   <scm>
     <url>https://github.com/bluebillywig/bb-sapi-java-sdk</url>
+    <connection>scm:git:https://github.com/bluebillywig/bb-sapi-java-sdk.git</connection>
+    <developerConnection>scm:git:git@github.com:bluebillywig/bb-sapi-java-sdk.git</developerConnection>
   </scm>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/bluebillywig/bb-sapi-java-sdk/issues</url>
+  </issueManagement>
 
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
@@ -64,4 +89,80 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!-- Maven Central release: sources + javadoc jars, GPG signatures, upload to the Sonatype
+         Central Portal. Only active with -P release (publish.yaml); a plain `mvn verify` is
+         unaffected. Credentials come from the `central` server in settings.xml and the GPG key
+         from the agent, both set up by actions/setup-java in CI. -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.3.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.12.0</version>
+            <configuration>
+              <failOnWarnings>true</failOnWarnings>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.8</version>
+            <configuration>
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.12.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <!-- Like the Android SDK: the deployment is validated on the portal and then
+                   released by hand at central.sonatype.com, so a bad release can be dropped. -->
+              <autoPublish>false</autoPublish>
+              <waitUntil>validated</waitUntil>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

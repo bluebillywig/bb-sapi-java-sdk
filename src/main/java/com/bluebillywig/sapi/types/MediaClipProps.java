@@ -74,7 +74,10 @@ public final class MediaClipProps {
         return title;
     }
 
-    /** @param title clip title @return this */
+    /**
+     * @param title clip title
+     * @return this
+     */
     public MediaClipProps setTitle(String title) {
         this.title = title;
         return this;
@@ -85,7 +88,10 @@ public final class MediaClipProps {
         return description;
     }
 
-    /** @param description clip description @return this */
+    /**
+     * @param description clip description
+     * @return this
+     */
     public MediaClipProps setDescription(String description) {
         this.description = description;
         return this;
@@ -96,7 +102,10 @@ public final class MediaClipProps {
         return author;
     }
 
-    /** @param author author @return this */
+    /**
+     * @param author author
+     * @return this
+     */
     public MediaClipProps setAuthor(String author) {
         this.author = author;
         return this;
@@ -107,7 +116,10 @@ public final class MediaClipProps {
         return copyright;
     }
 
-    /** @param copyright copyright notice @return this */
+    /**
+     * @param copyright copyright notice
+     * @return this
+     */
     public MediaClipProps setCopyright(String copyright) {
         this.copyright = copyright;
         return this;
@@ -118,7 +130,10 @@ public final class MediaClipProps {
         return deeplink;
     }
 
-    /** @param deeplink deeplink @return this */
+    /**
+     * @param deeplink deeplink
+     * @return this
+     */
     public MediaClipProps setDeeplink(String deeplink) {
         this.deeplink = deeplink;
         return this;
@@ -129,7 +144,10 @@ public final class MediaClipProps {
         return status;
     }
 
-    /** @param status status, e.g. {@code published} or {@code draft} @return this */
+    /**
+     * @param status status, e.g. {@code published} or {@code draft}
+     * @return this
+     */
     public MediaClipProps setStatus(String status) {
         this.status = status;
         return this;
@@ -140,7 +158,10 @@ public final class MediaClipProps {
         return usetype;
     }
 
-    /** @param usetype use type, e.g. {@code editorial} or {@code commercial} @return this */
+    /**
+     * @param usetype use type, e.g. {@code editorial} or {@code commercial}
+     * @return this
+     */
     public MediaClipProps setUsetype(String usetype) {
         this.usetype = usetype;
         return this;
@@ -151,7 +172,10 @@ public final class MediaClipProps {
         return fitmode;
     }
 
-    /** @param fitmode fit mode @return this */
+    /**
+     * @param fitmode fit mode
+     * @return this
+     */
     public MediaClipProps setFitmode(String fitmode) {
         this.fitmode = fitmode;
         return this;
@@ -162,7 +186,10 @@ public final class MediaClipProps {
         return sourcetype;
     }
 
-    /** @param sourcetype source type @return this */
+    /**
+     * @param sourcetype source type
+     * @return this
+     */
     public MediaClipProps setSourcetype(String sourcetype) {
         this.sourcetype = sourcetype;
         return this;
@@ -173,7 +200,10 @@ public final class MediaClipProps {
         return originalfilename;
     }
 
-    /** @param originalfilename original file name @return this */
+    /**
+     * @param originalfilename original file name
+     * @return this
+     */
     public MediaClipProps setOriginalfilename(String originalfilename) {
         this.originalfilename = originalfilename;
         return this;
@@ -184,13 +214,19 @@ public final class MediaClipProps {
         return length;
     }
 
-    /** @param length length @return this */
+    /**
+     * @param length length
+     * @return this
+     */
     public MediaClipProps setLength(Long length) {
         this.length = length;
         return this;
     }
 
-    /** @param length length @return this */
+    /**
+     * @param length length
+     * @return this
+     */
     public MediaClipProps setLength(long length) {
         this.length = length;
         return this;
@@ -201,7 +237,10 @@ public final class MediaClipProps {
         return cat;
     }
 
-    /** @param cat category @return this */
+    /**
+     * @param cat category
+     * @return this
+     */
     public MediaClipProps setCat(String cat) {
         this.cat = cat;
         return this;
@@ -212,7 +251,10 @@ public final class MediaClipProps {
         return playoutoverride;
     }
 
-    /** @param playoutoverride playout override @return this */
+    /**
+     * @param playoutoverride playout override
+     * @return this
+     */
     public MediaClipProps setPlayoutoverride(String playoutoverride) {
         this.playoutoverride = playoutoverride;
         return this;

@@ -144,7 +144,10 @@ public final class PlayoutProps {
         return name;
     }
 
-    /** @param name name @return this */
+    /**
+     * @param name name
+     * @return this
+     */
     public PlayoutProps setName(String name) {
         this.name = name;
         return this;
@@ -155,7 +158,10 @@ public final class PlayoutProps {
         return label;
     }
 
-    /** @param label label @return this */
+    /**
+     * @param label label
+     * @return this
+     */
     public PlayoutProps setLabel(String label) {
         this.label = label;
         return this;
@@ -166,7 +172,10 @@ public final class PlayoutProps {
         return status;
     }
 
-    /** @param status status @return this */
+    /**
+     * @param status status
+     * @return this
+     */
     public PlayoutProps setStatus(String status) {
         this.status = status;
         return this;
@@ -177,7 +186,10 @@ public final class PlayoutProps {
         return centerButtonType;
     }
 
-    /** @param centerButtonType center button type @return this */
+    /**
+     * @param centerButtonType center button type
+     * @return this
+     */
     public PlayoutProps setCenterButtonType(String centerButtonType) {
         this.centerButtonType = centerButtonType;
         return this;
@@ -188,7 +200,10 @@ public final class PlayoutProps {
         return cornerRadius;
     }
 
-    /** @param cornerRadius corner radius @return this */
+    /**
+     * @param cornerRadius corner radius
+     * @return this
+     */
     public PlayoutProps setCornerRadius(Integer cornerRadius) {
         this.cornerRadius = cornerRadius;
         return this;
@@ -199,7 +214,10 @@ public final class PlayoutProps {
         return responsiveSizing;
     }
 
-    /** @param responsiveSizing responsive sizing @return this */
+    /**
+     * @param responsiveSizing responsive sizing
+     * @return this
+     */
     public PlayoutProps setResponsiveSizing(Boolean responsiveSizing) {
         this.responsiveSizing = responsiveSizing;
         return this;
@@ -210,7 +228,10 @@ public final class PlayoutProps {
         return width;
     }
 
-    /** @param width width @return this */
+    /**
+     * @param width width
+     * @return this
+     */
     public PlayoutProps setWidth(Integer width) {
         this.width = width;
         return this;
@@ -221,7 +242,10 @@ public final class PlayoutProps {
         return height;
     }
 
-    /** @param height height @return this */
+    /**
+     * @param height height
+     * @return this
+     */
     public PlayoutProps setHeight(Integer height) {
         this.height = height;
         return this;
@@ -232,7 +256,10 @@ public final class PlayoutProps {
         return maxWidth;
     }
 
-    /** @param maxWidth max width @return this */
+    /**
+     * @param maxWidth max width
+     * @return this
+     */
     public PlayoutProps setMaxWidth(Integer maxWidth) {
         this.maxWidth = maxWidth;
         return this;
@@ -243,7 +270,10 @@ public final class PlayoutProps {
         return autoHeight;
     }
 
-    /** @param autoHeight auto height @return this */
+    /**
+     * @param autoHeight auto height
+     * @return this
+     */
     public PlayoutProps setAutoHeight(Boolean autoHeight) {
         this.autoHeight = autoHeight;
         return this;
@@ -254,7 +284,10 @@ public final class PlayoutProps {
         return aspectRatio;
     }
 
-    /** @param aspectRatio aspect ratio @return this */
+    /**
+     * @param aspectRatio aspect ratio
+     * @return this
+     */
     public PlayoutProps setAspectRatio(String aspectRatio) {
         this.aspectRatio = aspectRatio;
         return this;
@@ -265,7 +298,10 @@ public final class PlayoutProps {
         return backgroundColor;
     }
 
-    /** @param backgroundColor background color @return this */
+    /**
+     * @param backgroundColor background color
+     * @return this
+     */
     public PlayoutProps setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
         return this;
@@ -276,7 +312,10 @@ public final class PlayoutProps {
         return foregroundColor;
     }
 
-    /** @param foregroundColor foreground color @return this */
+    /**
+     * @param foregroundColor foreground color
+     * @return this
+     */
     public PlayoutProps setForegroundColor(String foregroundColor) {
         this.foregroundColor = foregroundColor;
         return this;
@@ -287,7 +326,10 @@ public final class PlayoutProps {
         return widgetColor;
     }
 
-    /** @param widgetColor widget color @return this */
+    /**
+     * @param widgetColor widget color
+     * @return this
+     */
     public PlayoutProps setWidgetColor(String widgetColor) {
         this.widgetColor = widgetColor;
         return this;
@@ -298,7 +340,10 @@ public final class PlayoutProps {
         return bgColor;
     }
 
-    /** @param bgColor bg color @return this */
+    /**
+     * @param bgColor bg color
+     * @return this
+     */
     public PlayoutProps setBgColor(String bgColor) {
         this.bgColor = bgColor;
         return this;
@@ -309,13 +354,19 @@ public final class PlayoutProps {
         return logoId;
     }
 
-    /** @param logoId logo ID @return this */
+    /**
+     * @param logoId logo ID
+     * @return this
+     */
     public PlayoutProps setLogoId(Long logoId) {
         this.logoId = logoId;
         return this;
     }
 
-    /** @param logoId logo ID @return this */
+    /**
+     * @param logoId logo ID
+     * @return this
+     */
     public PlayoutProps setLogoId(long logoId) {
         this.logoId = logoId;
         return this;
@@ -326,7 +377,10 @@ public final class PlayoutProps {
         return logoAlign;
     }
 
-    /** @param logoAlign logo alignment @return this */
+    /**
+     * @param logoAlign logo alignment
+     * @return this
+     */
     public PlayoutProps setLogoAlign(String logoAlign) {
         this.logoAlign = logoAlign;
         return this;
@@ -337,7 +391,10 @@ public final class PlayoutProps {
         return logoClickUrl;
     }
 
-    /** @param logoClickUrl logo click URL @return this */
+    /**
+     * @param logoClickUrl logo click URL
+     * @return this
+     */
     public PlayoutProps setLogoClickUrl(String logoClickUrl) {
         this.logoClickUrl = logoClickUrl;
         return this;
@@ -348,7 +405,10 @@ public final class PlayoutProps {
         return controlBar;
     }
 
-    /** @param controlBar control bar @return this */
+    /**
+     * @param controlBar control bar
+     * @return this
+     */
     public PlayoutProps setControlBar(Boolean controlBar) {
         this.controlBar = controlBar;
         return this;
@@ -359,7 +419,10 @@ public final class PlayoutProps {
         return timeDisplay;
     }
 
-    /** @param timeDisplay time display @return this */
+    /**
+     * @param timeDisplay time display
+     * @return this
+     */
     public PlayoutProps setTimeDisplay(Boolean timeDisplay) {
         this.timeDisplay = timeDisplay;
         return this;
@@ -370,7 +433,10 @@ public final class PlayoutProps {
         return timeLine;
     }
 
-    /** @param timeLine time line @return this */
+    /**
+     * @param timeLine time line
+     * @return this
+     */
     public PlayoutProps setTimeLine(Boolean timeLine) {
         this.timeLine = timeLine;
         return this;
@@ -381,7 +447,10 @@ public final class PlayoutProps {
         return muteButton;
     }
 
-    /** @param muteButton mute button @return this */
+    /**
+     * @param muteButton mute button
+     * @return this
+     */
     public PlayoutProps setMuteButton(Boolean muteButton) {
         this.muteButton = muteButton;
         return this;
@@ -392,7 +461,10 @@ public final class PlayoutProps {
         return volume;
     }
 
-    /** @param volume volume @return this */
+    /**
+     * @param volume volume
+     * @return this
+     */
     public PlayoutProps setVolume(Boolean volume) {
         this.volume = volume;
         return this;
@@ -403,7 +475,10 @@ public final class PlayoutProps {
         return fullScreen;
     }
 
-    /** @param fullScreen full screen @return this */
+    /**
+     * @param fullScreen full screen
+     * @return this
+     */
     public PlayoutProps setFullScreen(Boolean fullScreen) {
         this.fullScreen = fullScreen;
         return this;
@@ -414,7 +489,10 @@ public final class PlayoutProps {
         return autoPlay;
     }
 
-    /** @param autoPlay auto play @return this */
+    /**
+     * @param autoPlay auto play
+     * @return this
+     */
     public PlayoutProps setAutoPlay(Boolean autoPlay) {
         this.autoPlay = autoPlay;
         return this;
@@ -425,7 +503,10 @@ public final class PlayoutProps {
         return autoLoop;
     }
 
-    /** @param autoLoop auto loop @return this */
+    /**
+     * @param autoLoop auto loop
+     * @return this
+     */
     public PlayoutProps setAutoLoop(Boolean autoLoop) {
         this.autoLoop = autoLoop;
         return this;
@@ -436,7 +517,10 @@ public final class PlayoutProps {
         return autoMute;
     }
 
-    /** @param autoMute auto mute @return this */
+    /**
+     * @param autoMute auto mute
+     * @return this
+     */
     public PlayoutProps setAutoMute(Boolean autoMute) {
         this.autoMute = autoMute;
         return this;
@@ -447,7 +531,10 @@ public final class PlayoutProps {
         return title;
     }
 
-    /** @param title title @return this */
+    /**
+     * @param title title
+     * @return this
+     */
     public PlayoutProps setTitle(Boolean title) {
         this.title = title;
         return this;
@@ -458,7 +545,10 @@ public final class PlayoutProps {
         return fitmode;
     }
 
-    /** @param fitmode fit mode @return this */
+    /**
+     * @param fitmode fit mode
+     * @return this
+     */
     public PlayoutProps setFitmode(String fitmode) {
         this.fitmode = fitmode;
         return this;
@@ -469,7 +559,10 @@ public final class PlayoutProps {
         return commercials;
     }
 
-    /** @param commercials commercials @return this */
+    /**
+     * @param commercials commercials
+     * @return this
+     */
     public PlayoutProps setCommercials(List<JsonNode> commercials) {
         this.commercials = commercials;
         return this;

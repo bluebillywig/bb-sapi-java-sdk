@@ -50,7 +50,10 @@ public final class ChannelDetailPageConfig {
         return playerAlignment;
     }
 
-    /** @param playerAlignment player alignment @return this */
+    /**
+     * @param playerAlignment player alignment
+     * @return this
+     */
     public ChannelDetailPageConfig setPlayerAlignment(String playerAlignment) {
         this.playerAlignment = playerAlignment;
         return this;
@@ -61,7 +64,10 @@ public final class ChannelDetailPageConfig {
         return withinBorder;
     }
 
-    /** @param withinBorder within border @return this */
+    /**
+     * @param withinBorder within border
+     * @return this
+     */
     public ChannelDetailPageConfig setWithinBorder(Boolean withinBorder) {
         this.withinBorder = withinBorder;
         return this;
@@ -72,7 +78,10 @@ public final class ChannelDetailPageConfig {
         return backgroundColor;
     }
 
-    /** @param backgroundColor background color @return this */
+    /**
+     * @param backgroundColor background color
+     * @return this
+     */
     public ChannelDetailPageConfig setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
         return this;
@@ -83,7 +92,10 @@ public final class ChannelDetailPageConfig {
         return showThumbnailAsBackground;
     }
 
-    /** @param showThumbnailAsBackground show thumbnail as background @return this */
+    /**
+     * @param showThumbnailAsBackground show thumbnail as background
+     * @return this
+     */
     public ChannelDetailPageConfig setShowThumbnailAsBackground(Boolean showThumbnailAsBackground) {
         this.showThumbnailAsBackground = showThumbnailAsBackground;
         return this;
@@ -94,7 +106,10 @@ public final class ChannelDetailPageConfig {
         return enableBackgroundBlur;
     }
 
-    /** @param enableBackgroundBlur enable background blur @return this */
+    /**
+     * @param enableBackgroundBlur enable background blur
+     * @return this
+     */
     public ChannelDetailPageConfig setEnableBackgroundBlur(Boolean enableBackgroundBlur) {
         this.enableBackgroundBlur = enableBackgroundBlur;
         return this;
@@ -105,7 +120,10 @@ public final class ChannelDetailPageConfig {
         return showRelatedItems;
     }
 
-    /** @param showRelatedItems show related items @return this */
+    /**
+     * @param showRelatedItems show related items
+     * @return this
+     */
     public ChannelDetailPageConfig setShowRelatedItems(Boolean showRelatedItems) {
         this.showRelatedItems = showRelatedItems;
         return this;
@@ -116,7 +134,10 @@ public final class ChannelDetailPageConfig {
         return relatedItemsLayout;
     }
 
-    /** @param relatedItemsLayout related items layout @return this */
+    /**
+     * @param relatedItemsLayout related items layout
+     * @return this
+     */
     public ChannelDetailPageConfig setRelatedItemsLayout(String relatedItemsLayout) {
         this.relatedItemsLayout = relatedItemsLayout;
         return this;

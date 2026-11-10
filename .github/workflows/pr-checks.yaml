@@ -19,3 +19,8 @@ jobs:
 
       - name: Build and test
         run: mvn -B verify
+
+      # The release profile (sources + javadoc jars, javadoc failOnWarnings) otherwise only runs at
+      # release time, after the tag exists.
+      - name: Build the release artifacts (unsigned)
+        run: mvn -B -P release -Dgpg.skip=true -DskipTests package

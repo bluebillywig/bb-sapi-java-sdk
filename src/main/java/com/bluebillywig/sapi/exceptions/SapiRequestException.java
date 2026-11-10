@@ -7,7 +7,10 @@ package com.bluebillywig.sapi.exceptions;
 public class SapiRequestException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
+    /** The HTTP status code. */
     private final int statusCode;
+
+    /** The response body, or {@code null}. */
     private final String responseBody;
 
     /**

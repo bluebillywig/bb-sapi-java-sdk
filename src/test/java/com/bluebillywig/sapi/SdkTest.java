@@ -373,6 +373,18 @@ class SdkTest extends SdkTestBase {
     }
 
     @Test
+    void injectedClientThatFollowsRedirectsIsRejected() {
+        for (java.net.http.HttpClient.Redirect mode : List.of(
+                java.net.http.HttpClient.Redirect.NORMAL, java.net.http.HttpClient.Redirect.ALWAYS)) {
+            java.net.http.HttpClient client = java.net.http.HttpClient.newBuilder().followRedirects(mode).build();
+            assertThrows(IllegalArgumentException.class,
+                    () -> new Sdk("p", new EmptyAuthenticator(), new SdkOptions().setHttpClient(client)));
+        }
+        // the default of HttpClient.newHttpClient() is Redirect.NEVER, so it is fine
+        new Sdk("p", new EmptyAuthenticator(), new SdkOptions().setHttpClient(java.net.http.HttpClient.newHttpClient()));
+    }
+
+    @Test
     void uploadBodyHasContentLengthNotChunked() {
         Fixture f = create();
         MockServer s3 = server(ok());
