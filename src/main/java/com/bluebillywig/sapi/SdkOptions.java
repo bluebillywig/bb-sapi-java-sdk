@@ -37,8 +37,11 @@ public final class SdkOptions {
      * manages request timeouts itself (see {@link #setTimeout(Duration)}), by waiting on
      * {@link HttpClient#sendAsync}; an injected client must therefore implement
      * {@code sendAsync} (a plain {@code HttpClient} always does). Redirects are not followed by
-     * the SDK's own client, so the {@code rpctoken} can never be replayed to another origin; set
-     * {@link HttpClient.Redirect} on your own client only if you accept that.
+     * the SDK's own client, so the {@code rpctoken} can never be replayed to another origin. An
+     * injected client must do the same: build it with
+     * {@code HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NEVER)}. The
+     * {@link Sdk} constructor throws {@link IllegalArgumentException} for a client whose
+     * {@code followRedirects()} is anything else.
      *
      * @param httpClient the client, or {@code null}
      * @return this

@@ -94,7 +94,10 @@ public final class PlaylistProps {
         return title;
     }
 
-    /** @param title title @return this */
+    /**
+     * @param title title
+     * @return this
+     */
     public PlaylistProps setTitle(String title) {
         this.title = title;
         return this;
@@ -105,7 +108,10 @@ public final class PlaylistProps {
         return description;
     }
 
-    /** @param description description @return this */
+    /**
+     * @param description description
+     * @return this
+     */
     public PlaylistProps setDescription(String description) {
         this.description = description;
         return this;
@@ -116,7 +122,10 @@ public final class PlaylistProps {
         return status;
     }
 
-    /** @param status status @return this */
+    /**
+     * @param status status
+     * @return this
+     */
     public PlaylistProps setStatus(String status) {
         this.status = status;
         return this;
@@ -127,7 +136,10 @@ public final class PlaylistProps {
         return type;
     }
 
-    /** @param type playlist type @return this */
+    /**
+     * @param type playlist type
+     * @return this
+     */
     public PlaylistProps setType(String type) {
         this.type = type;
         return this;
@@ -138,7 +150,10 @@ public final class PlaylistProps {
         return query;
     }
 
-    /** @param query query @return this */
+    /**
+     * @param query query
+     * @return this
+     */
     public PlaylistProps setQuery(String query) {
         this.query = query;
         return this;
@@ -149,7 +164,10 @@ public final class PlaylistProps {
         return mediatype;
     }
 
-    /** @param mediatype media type @return this */
+    /**
+     * @param mediatype media type
+     * @return this
+     */
     public PlaylistProps setMediatype(String mediatype) {
         this.mediatype = mediatype;
         return this;
@@ -160,7 +178,10 @@ public final class PlaylistProps {
         return usetype;
     }
 
-    /** @param usetype use type @return this */
+    /**
+     * @param usetype use type
+     * @return this
+     */
     public PlaylistProps setUsetype(String usetype) {
         this.usetype = usetype;
         return this;
@@ -171,7 +192,10 @@ public final class PlaylistProps {
         return copyright;
     }
 
-    /** @param copyright copyright @return this */
+    /**
+     * @param copyright copyright
+     * @return this
+     */
     public PlaylistProps setCopyright(String copyright) {
         this.copyright = copyright;
         return this;
@@ -182,7 +206,10 @@ public final class PlaylistProps {
         return author;
     }
 
-    /** @param author author @return this */
+    /**
+     * @param author author
+     * @return this
+     */
     public PlaylistProps setAuthor(String author) {
         this.author = author;
         return this;
@@ -193,7 +220,10 @@ public final class PlaylistProps {
         return deeplinkUrl;
     }
 
-    /** @param deeplinkUrl deeplink URL @return this */
+    /**
+     * @param deeplinkUrl deeplink URL
+     * @return this
+     */
     public PlaylistProps setDeeplinkUrl(String deeplinkUrl) {
         this.deeplinkUrl = deeplinkUrl;
         return this;
@@ -204,7 +234,10 @@ public final class PlaylistProps {
         return shortTitle;
     }
 
-    /** @param shortTitle short title @return this */
+    /**
+     * @param shortTitle short title
+     * @return this
+     */
     public PlaylistProps setShortTitle(String shortTitle) {
         this.shortTitle = shortTitle;
         return this;
@@ -215,7 +248,10 @@ public final class PlaylistProps {
         return externalUrl;
     }
 
-    /** @param externalUrl external URL @return this */
+    /**
+     * @param externalUrl external URL
+     * @return this
+     */
     public PlaylistProps setExternalUrl(String externalUrl) {
         this.externalUrl = externalUrl;
         return this;
@@ -226,7 +262,10 @@ public final class PlaylistProps {
         return shuffleOrder;
     }
 
-    /** @param shuffleOrder shuffle order @return this */
+    /**
+     * @param shuffleOrder shuffle order
+     * @return this
+     */
     public PlaylistProps setShuffleOrder(Boolean shuffleOrder) {
         this.shuffleOrder = shuffleOrder;
         return this;
@@ -237,7 +276,10 @@ public final class PlaylistProps {
         return useSuggest;
     }
 
-    /** @param useSuggest use suggest @return this */
+    /**
+     * @param useSuggest use suggest
+     * @return this
+     */
     public PlaylistProps setUseSuggest(Boolean useSuggest) {
         this.useSuggest = useSuggest;
         return this;
@@ -248,7 +290,10 @@ public final class PlaylistProps {
         return extraSuggestQuery;
     }
 
-    /** @param extraSuggestQuery extra suggest query @return this */
+    /**
+     * @param extraSuggestQuery extra suggest query
+     * @return this
+     */
     public PlaylistProps setExtraSuggestQuery(String extraSuggestQuery) {
         this.extraSuggestQuery = extraSuggestQuery;
         return this;
@@ -259,7 +304,10 @@ public final class PlaylistProps {
         return allowDatasource;
     }
 
-    /** @param allowDatasource allow datasource @return this */
+    /**
+     * @param allowDatasource allow datasource
+     * @return this
+     */
     public PlaylistProps setAllowDatasource(Boolean allowDatasource) {
         this.allowDatasource = allowDatasource;
         return this;
@@ -270,7 +318,10 @@ public final class PlaylistProps {
         return limit;
     }
 
-    /** @param limit limit @return this */
+    /**
+     * @param limit limit
+     * @return this
+     */
     public PlaylistProps setLimit(Integer limit) {
         this.limit = limit;
         return this;
@@ -281,7 +332,10 @@ public final class PlaylistProps {
         return sort;
     }
 
-    /** @param sort sort @return this */
+    /**
+     * @param sort sort
+     * @return this
+     */
     public PlaylistProps setSort(String sort) {
         this.sort = sort;
         return this;

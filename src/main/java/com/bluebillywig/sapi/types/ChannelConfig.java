@@ -36,7 +36,10 @@ public final class ChannelConfig {
         return playIn;
     }
 
-    /** @param playIn play-in mode @return this */
+    /**
+     * @param playIn play-in mode
+     * @return this
+     */
     public ChannelConfig setPlayIn(String playIn) {
         this.playIn = playIn;
         return this;
@@ -47,7 +50,10 @@ public final class ChannelConfig {
         return detailPageConfig;
     }
 
-    /** @param detailPageConfig detail page configuration @return this */
+    /**
+     * @param detailPageConfig detail page configuration
+     * @return this
+     */
     public ChannelConfig setDetailPageConfig(ChannelDetailPageConfig detailPageConfig) {
         this.detailPageConfig = detailPageConfig;
         return this;
@@ -58,7 +64,10 @@ public final class ChannelConfig {
         return blocks;
     }
 
-    /** @param blocks blocks @return this */
+    /**
+     * @param blocks blocks
+     * @return this
+     */
     public ChannelConfig setBlocks(List<JsonNode> blocks) {
         this.blocks = blocks;
         return this;

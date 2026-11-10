@@ -38,7 +38,10 @@ public final class S3Part {
         return eTag;
     }
 
-    /** @param eTag the part's ETag (without quotes) @return this */
+    /**
+     * @param eTag the part's ETag (without quotes)
+     * @return this
+     */
     public S3Part setETag(String eTag) {
         this.eTag = eTag;
         return this;
@@ -49,7 +52,10 @@ public final class S3Part {
         return partNumber;
     }
 
-    /** @param partNumber the part number @return this */
+    /**
+     * @param partNumber the part number
+     * @return this
+     */
     public S3Part setPartNumber(String partNumber) {
         this.partNumber = partNumber;
         return this;

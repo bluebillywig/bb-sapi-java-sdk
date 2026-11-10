@@ -46,7 +46,10 @@ public final class SubtitleProps {
         return status;
     }
 
-    /** @param status status @return this */
+    /**
+     * @param status status
+     * @return this
+     */
     public SubtitleProps setStatus(String status) {
         this.status = status;
         return this;
@@ -57,13 +60,19 @@ public final class SubtitleProps {
         return mediaclipId;
     }
 
-    /** @param mediaclipId media clip ID @return this */
+    /**
+     * @param mediaclipId media clip ID
+     * @return this
+     */
     public SubtitleProps setMediaclipId(Long mediaclipId) {
         this.mediaclipId = mediaclipId;
         return this;
     }
 
-    /** @param mediaclipId media clip ID @return this */
+    /**
+     * @param mediaclipId media clip ID
+     * @return this
+     */
     public SubtitleProps setMediaclipId(long mediaclipId) {
         this.mediaclipId = mediaclipId;
         return this;
@@ -74,13 +83,19 @@ public final class SubtitleProps {
         return languageId;
     }
 
-    /** @param languageId language ID @return this */
+    /**
+     * @param languageId language ID
+     * @return this
+     */
     public SubtitleProps setLanguageId(Long languageId) {
         this.languageId = languageId;
         return this;
     }
 
-    /** @param languageId language ID @return this */
+    /**
+     * @param languageId language ID
+     * @return this
+     */
     public SubtitleProps setLanguageId(long languageId) {
         this.languageId = languageId;
         return this;
@@ -91,7 +106,10 @@ public final class SubtitleProps {
         return isocode;
     }
 
-    /** @param isocode iSO code @return this */
+    /**
+     * @param isocode iSO code
+     * @return this
+     */
     public SubtitleProps setIsocode(String isocode) {
         this.isocode = isocode;
         return this;
@@ -102,7 +120,10 @@ public final class SubtitleProps {
         return originalfilename;
     }
 
-    /** @param originalfilename original file name @return this */
+    /**
+     * @param originalfilename original file name
+     * @return this
+     */
     public SubtitleProps setOriginalfilename(String originalfilename) {
         this.originalfilename = originalfilename;
         return this;
@@ -113,7 +134,10 @@ public final class SubtitleProps {
         return uploadIdentifier;
     }
 
-    /** @param uploadIdentifier upload identifier @return this */
+    /**
+     * @param uploadIdentifier upload identifier
+     * @return this
+     */
     public SubtitleProps setUploadIdentifier(String uploadIdentifier) {
         this.uploadIdentifier = uploadIdentifier;
         return this;

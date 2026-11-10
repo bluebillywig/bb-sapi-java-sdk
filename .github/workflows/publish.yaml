@@ -1,0 +1,57 @@
+name: Publish to Maven Central
+on:
+  release:
+    types: [published]
+
+# Secrets (shared with bbnativeplayersdk-kotlin, which publishes to the same
+# com.bluebillywig namespace; make them org-level or copy them to this repo):
+#   GRADLE_MAVEN_USERNAME / GRADLE_MAVEN_PASSWORD  Central Portal user token
+#   GRADLE_SIGNING_KEY                             ASCII-armored GPG private key
+#   GRADLE_SIGNING_KEY_PASSWORD                    its passphrase
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate release tag
+        run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo "::error::Release tag '$GITHUB_REF_NAME' is not v{x}.{y}.{z}"
+            exit 1
+          fi
+          echo "RELEASE_VERSION=${BASH_REMATCH[1]}" >>"$GITHUB_ENV"
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          server-id: central
+          server-username: MAVEN_CENTRAL_USERNAME
+          server-password: MAVEN_CENTRAL_PASSWORD
+          gpg-private-key: ${{ secrets.GRADLE_SIGNING_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Set version from tag
+        run: |
+          # The first <version> in pom.xml is the project version (see the comment there).
+          sed -i "0,/<version>[^<]*<\/version>/s//<version>${RELEASE_VERSION}<\/version>/" pom.xml
+          grep -m1 "<version>${RELEASE_VERSION}</version>" pom.xml
+
+      - name: Build, sign and upload to the Central Portal
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.GRADLE_MAVEN_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.GRADLE_MAVEN_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GRADLE_SIGNING_KEY_PASSWORD }}
+        run: mvn -B -P release deploy
+
+      # The deployment is now validated on central.sonatype.com but not public:
+      # release it there by hand (autoPublish=false in pom.xml).
+      - name: Next step
+        run: echo "::notice::Deployment ${RELEASE_VERSION} validated; publish it at https://central.sonatype.com/publishing/deployments"

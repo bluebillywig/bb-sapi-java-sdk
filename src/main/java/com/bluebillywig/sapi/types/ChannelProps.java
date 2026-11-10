@@ -26,7 +26,10 @@ public final class ChannelProps {
         return config;
     }
 
-    /** @param config configuration @return this */
+    /**
+     * @param config configuration
+     * @return this
+     */
     public ChannelProps setConfig(ChannelConfig config) {
         this.config = config;
         return this;

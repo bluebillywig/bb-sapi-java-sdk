@@ -27,7 +27,10 @@ public final class PresignedUrl {
         return presignedUrlValue;
     }
 
-    /** @param presignedUrlValue the presigned PUT URL @return this */
+    /**
+     * @param presignedUrlValue the presigned PUT URL
+     * @return this
+     */
     public PresignedUrl setPresignedUrlValue(String presignedUrlValue) {
         this.presignedUrlValue = presignedUrlValue;
         return this;
@@ -38,13 +41,19 @@ public final class PresignedUrl {
         return offset;
     }
 
-    /** @param offset byte offset of this part in the file (defaults to 0) @return this */
+    /**
+     * @param offset byte offset of this part in the file (defaults to 0)
+     * @return this
+     */
     public PresignedUrl setOffset(Long offset) {
         this.offset = offset;
         return this;
     }
 
-    /** @param offset byte offset of this part in the file (defaults to 0) @return this */
+    /**
+     * @param offset byte offset of this part in the file (defaults to 0)
+     * @return this
+     */
     public PresignedUrl setOffset(long offset) {
         this.offset = offset;
         return this;
@@ -55,13 +64,19 @@ public final class PresignedUrl {
         return chunkSize;
     }
 
-    /** @param chunkSize size of this part in bytes (defaults to the whole file) @return this */
+    /**
+     * @param chunkSize size of this part in bytes (defaults to the whole file)
+     * @return this
+     */
     public PresignedUrl setChunkSize(Long chunkSize) {
         this.chunkSize = chunkSize;
         return this;
     }
 
-    /** @param chunkSize size of this part in bytes (defaults to the whole file) @return this */
+    /**
+     * @param chunkSize size of this part in bytes (defaults to the whole file)
+     * @return this
+     */
     public PresignedUrl setChunkSize(long chunkSize) {
         this.chunkSize = chunkSize;
         return this;

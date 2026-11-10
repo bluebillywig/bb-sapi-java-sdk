@@ -75,6 +75,7 @@ public final class Sdk {
      * @param publication the publication name
      * @param authenticator the request authenticator
      * @param options optional SDK configuration, or {@code null}
+     * @throws IllegalArgumentException if the injected {@link HttpClient} follows redirects
      */
     public Sdk(String publication, Authenticator authenticator, SdkOptions options) {
         this.publication = Objects.requireNonNull(publication, "publication");
@@ -83,9 +84,14 @@ public final class Sdk {
         this.baseUri = opts.getBaseUri() != null ? opts.getBaseUri() : "https://" + publication + ".bbvms.com";
         this.timeout = opts.getTimeout();
         // Redirects are deliberately not followed: java.net.http would replay custom headers
-        // (the rpctoken) to whatever host a redirect points at.
-        this.http = opts.getHttpClient() != null
-                ? opts.getHttpClient()
+        // (the rpctoken) to whatever host a redirect points at. An injected client must agree.
+        HttpClient injected = opts.getHttpClient();
+        if (injected != null && injected.followRedirects() != HttpClient.Redirect.NEVER) {
+            throw new IllegalArgumentException("The injected HttpClient must be built with Redirect.NEVER (it has "
+                    + injected.followRedirects() + "): following redirects could replay the rpctoken to another origin.");
+        }
+        this.http = injected != null
+                ? injected
                 : HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NEVER).build();
         this.entities = new EntityRegister(this, ENTITY_REGISTRATIONS);
     }

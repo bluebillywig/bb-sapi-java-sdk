@@ -571,10 +571,27 @@ class MediaClipTest extends SdkTestBase {
         assertTrue(it.hasNext());
     }
 
+    private static String s3Xml(int parts) {
+        StringBuilder xml = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<ListPartsResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">"
+                + "<Bucket>b</Bucket><Key>k</Key><UploadId>u</UploadId><PartNumberMarker>0</PartNumberMarker>"
+                + "<NextPartNumberMarker>" + parts + "</NextPartNumberMarker><MaxParts>1000</MaxParts>"
+                + "<IsTruncated>false</IsTruncated>");
+        for (int i = 1; i <= parts; i++) {
+            xml.append("<Part><PartNumber>").append(i).append("</PartNumber><LastModified>2026-01-01T00:00:00.000Z</LastModified>"
+                    + "<ETag>&quot;abc").append(i).append("&quot;</ETag><Size>5242880</Size></Part>");
+        }
+        return xml.append("</ListPartsResult>").toString();
+    }
+
+    private double progressOf(String body, int partsCount) {
+        Fixture f = create();
+        MockServer s3 = server(ok(body));
+        return f.sdk().mediaClip().getUploadProgress(s3.url("/list-part"), s3.url("/head-object"), partsCount);
+    }
+
     @Test
-    void connectionFailureDuringAPartPropagatesWithoutAbort() {
-        // Same as the .NET flow: only a rejected response triggers the abort, a transport failure
-        // (here: nothing listens on the presigned host) propagates as is.
+    void connectionFailureDuringAPartStillAbortsTheMultiPartUpload() {
         Fixture f = create(ok());
         MockServer gone = new MockServer();
         String url = gone.url("/p");
@@ -588,6 +605,210 @@ class MediaClipTest extends SdkTestBase {
                 .setPresignedUrls(List.of(
                         new PresignedUrl().setPresignedUrlValue(url).setOffset(0).setChunkSize(10),
                         new PresignedUrl().setPresignedUrlValue(url).setOffset(10).setChunkSize(10)))));
-        assertFalse(f.server().calls().stream().anyMatch(c -> c.url().contains("abortUpload")));
+
+        assertEquals(1, f.server().calls().size());
+        assertEquals("/sapi/mediaclip/0/abortUpload", pathOf(f.server().call(0).url()));
+        assertEquals("k", query(f.server().call(0).url(), "s3filekey"));
+        assertEquals("u", query(f.server().call(0).url(), "s3uploadid"));
+    }
+
+    @Test
+    void abortFailureIsSuppressedNotMaskingATransportFailure() {
+        Fixture f = create(status(500));
+        MockServer gone = new MockServer();
+        String url = gone.url("/p");
+        gone.close();
+        Path path = tempFile(20, 0x41);
+
+        SapiConnectionException ex = assertThrows(SapiConnectionException.class,
+                () -> f.sdk().mediaClip().executeUpload(path.toString(), new UploadData()
+                        .setKey("k").setUploadId("u").setChunks(2)
+                        .setPresignedUrls(List.of(
+                                new PresignedUrl().setPresignedUrlValue(url).setOffset(0).setChunkSize(10),
+                                new PresignedUrl().setPresignedUrlValue(url).setOffset(10).setChunkSize(10)))));
+
+        assertEquals(1, ex.getSuppressed().length);
+        assertInstanceOf(SapiServerErrorException.class, ex.getSuppressed()[0]);
+    }
+
+    @Test
+    void interruptedThreadStillAbortsAndKeepsTheInterruptFlag() {
+        Fixture f = create(ok());
+        MockServer s3 = server(ok().delayed(200));
+        Path path = tempFile(20, 0x41);
+
+        Thread.currentThread().interrupt();
+        try {
+            assertThrows(java.util.concurrent.CancellationException.class, () -> f.sdk().mediaClip().executeUpload(path.toString(),
+                    new UploadData().setKey("k").setUploadId("u").setChunks(2).setPresignedUrls(List.of(
+                            new PresignedUrl().setPresignedUrlValue(s3.url("/p/1")).setOffset(0).setChunkSize(10),
+                            new PresignedUrl().setPresignedUrlValue(s3.url("/p/2")).setOffset(10).setChunkSize(10)))));
+            assertTrue(Thread.currentThread().isInterrupted());
+        } finally {
+            Thread.interrupted();
+        }
+
+        assertEquals(1, f.server().calls().size());
+        assertEquals("/sapi/mediaclip/0/abortUpload", pathOf(f.server().call(0).url()));
+    }
+
+    @Test
+    void nonTransportExceptionWhileUploadingAlsoAborts() {
+        Fixture f = create(ok());
+        Path path = tempFile(20, 0x41);
+        MockServer s3 = server(ok());
+        UploadData data = new UploadData().setKey("k").setUploadId("u").setChunks(2).setPresignedUrls(List.of(
+                new PresignedUrl().setPresignedUrlValue(s3.url("/p/1")).setOffset(0).setChunkSize(10),
+                new PresignedUrl().setPresignedUrlValue(null).setOffset(10).setChunkSize(10)));
+
+        // a NullPointerException, not a transport failure: the abort must still go out
+        assertThrows(NullPointerException.class, () -> f.sdk().mediaClip().executeUpload(path.toString(), data));
+        assertEquals(1, f.server().calls().size());
+        assertEquals("/sapi/mediaclip/0/abortUpload", pathOf(f.server().call(0).url()));
+    }
+
+    // -- progress: S3 answers XML --------------------------------------------------------------
+
+    @Test
+    void progressFromS3XmlWithNoParts() {
+        assertEquals(0, progressOf(s3Xml(0), 3));
+    }
+
+    @Test
+    void progressFromS3XmlWithOnePart() {
+        assertEquals(100.0 / 3, progressOf(s3Xml(1), 3), 1e-9);
+    }
+
+    @Test
+    void progressFromS3XmlWithThreeParts() {
+        assertEquals(100, progressOf(s3Xml(3), 3));
+    }
+
+    @Test
+    void xmlPartCountOnlyCountsDirectChildrenOfTheRoot() {
+        String xml = "<ListPartsResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Part><PartNumber>1</PartNumber>"
+                + "<Part>nested</Part></Part><Initiator><Part/></Initiator></ListPartsResult>";
+        assertEquals(50, progressOf(xml, 2));
+    }
+
+    @Test
+    void xmlWithoutNamespaceAndWithXmlContentTypeWorks() {
+        Fixture f = create();
+        MockServer s3 = server(new MockServer.MockResponse(200, java.util.Map.of("Content-Type", "application/xml"),
+                "<ListPartsResult><Part/><Part/></ListPartsResult>", 0));
+        assertEquals(50, f.sdk().mediaClip().getUploadProgress(s3.url("/l"), s3.url("/h"), 4));
+    }
+
+    @Test
+    void jsonShapeIsStillAcceptedByContentTypeOrLeadingBrace() {
+        Fixture f = create();
+        MockServer s3 = server(new MockServer.MockResponse(200, java.util.Map.of("Content-Type", "application/json"),
+                "{\"Part\":[{},{}]}", 0));
+        assertEquals(50, f.sdk().mediaClip().getUploadProgress(s3.url("/l"), s3.url("/h"), 4));
+        assertEquals(25, progressOf("  {\"Part\":{\"PartNumber\":1}}", 4));
+    }
+
+    @Test
+    void malformedXmlIsASapiRequestException() {
+        assertThrows(com.bluebillywig.sapi.exceptions.SapiRequestException.class, () -> progressOf("<ListPartsResult><Part>", 3));
+    }
+
+    @Test
+    void xmlWithADoctypeIsRejectedAndNothingIsFetched() {
+        MockServer victim = server(ok("secret"));
+        String xml = "<?xml version=\"1.0\"?><!DOCTYPE r [<!ENTITY x SYSTEM \"" + victim.url("/xxe") + "\">]>"
+                + "<ListPartsResult><Part>&x;</Part></ListPartsResult>";
+
+        assertThrows(com.bluebillywig.sapi.exceptions.SapiRequestException.class, () -> progressOf(xml, 3));
+        assertTrue(victim.calls().isEmpty());
+    }
+
+    // -- progress: partsCount validation and clamping --------------------------------------------
+
+    @Test
+    void zeroOrNegativePartsCountIsRejected() {
+        Fixture f = create();
+        MediaClip clip = f.sdk().mediaClip();
+        assertThrows(IllegalArgumentException.class, () -> clip.getUploadProgress("http://x/l", "http://x/h", 0));
+        assertThrows(IllegalArgumentException.class, () -> clip.getUploadProgress("http://x/l", "http://x/h", -1));
+        assertThrows(IllegalArgumentException.class, () -> clip.uploadProgress("http://x/l", "http://x/h", 0));
+        assertThrows(IllegalArgumentException.class, () -> clip.uploadProgress("http://x/l", "http://x/h", -2, 10, 0));
+    }
+
+    @Test
+    void overshootingPartCountIsClampedTo100AndTheIteratorStops() {
+        Fixture f = create();
+        MockServer s3 = server(ok(s3Xml(2)), ok(s3Xml(4)), ok(s3Xml(4)));
+        Iterator<Double> it = f.sdk().mediaClip().uploadProgress(s3.url("/l"), s3.url("/h"), 3, 1, 0);
+
+        List<Double> seen = new ArrayList<>();
+        while (it.hasNext()) {
+            seen.add(it.next());
+        }
+
+        assertEquals(2, seen.size());
+        assertEquals(200.0 / 3, seen.get(0), 1e-9);
+        assertEquals(100.0, seen.get(1));
+        assertEquals(2, s3.calls().size());
+        assertEquals(100, progressOf(s3Xml(4), 3));
+    }
+
+    // -- parts above 2 GiB -------------------------------------------------------------------------
+
+    @Test
+    void partLengthIsComputedInLongArithmetic() {
+        long gib = 1L << 30;
+        assertEquals(5 * gib, MediaClip.partLength(12 * gib, 5 * gib, 0L));
+        assertEquals(3 * gib, MediaClip.partLength(12 * gib, 3 * gib, 6 * gib));
+        assertEquals(2 * gib + 1, MediaClip.partLength(5 * gib, 3 * gib, 3 * gib - 1));
+        assertEquals(gib, MediaClip.partLength(5 * gib, 3 * gib, 4 * gib), "clipped to the end of the file");
+        assertEquals(5 * gib, MediaClip.partLength(5 * gib, null, null), "default: the whole file");
+        assertEquals(0, MediaClip.partLength(10, 5L, 10L));
+        assertEquals(0, MediaClip.partLength(10, 5L, 99L));
+        assertEquals(0, MediaClip.partLength(10, -5L, 0L));
+    }
+
+    @Test
+    void partBodyAdvertisesItsLengthAbove2GiBWithoutReadingTheFile() {
+        long gib = 1L << 30;
+        Path nowhere = tempDir.resolve("never-opened.bin");
+        assertEquals(5 * gib, MediaClip.partBody(nowhere, 7 * gib, 5 * gib).contentLength());
+        assertEquals(2 * gib + 1, MediaClip.partBody(nowhere, 0, 2 * gib + 1).contentLength());
+        assertEquals(0, MediaClip.partBody(nowhere, 0, 0).contentLength());
+    }
+
+    @Test
+    void partBodyStreamsTheSliceAtAnOffset() throws Exception {
+        byte[] content = new byte[100_000];
+        new java.util.Random(7).nextBytes(content);
+        Path path = tempDir.resolve("stream.bin");
+        Files.write(path, content);
+
+        var publisher = MediaClip.partBody(path, 1234, 70_000);
+        var out = new java.io.ByteArrayOutputStream();
+        var done = new java.util.concurrent.CompletableFuture<Void>();
+        publisher.subscribe(new java.util.concurrent.Flow.Subscriber<java.nio.ByteBuffer>() {
+            public void onSubscribe(java.util.concurrent.Flow.Subscription s) {
+                s.request(Long.MAX_VALUE);
+            }
+
+            public void onNext(java.nio.ByteBuffer b) {
+                byte[] chunk = new byte[b.remaining()];
+                b.get(chunk);
+                out.writeBytes(chunk);
+            }
+
+            public void onError(Throwable t) {
+                done.completeExceptionally(t);
+            }
+
+            public void onComplete() {
+                done.complete(null);
+            }
+        });
+        done.get(10, java.util.concurrent.TimeUnit.SECONDS);
+
+        assertEquals(70_000, publisher.contentLength());
+        assertArrayEquals(Arrays.copyOfRange(content, 1234, 71_234), out.toByteArray());
     }
 }

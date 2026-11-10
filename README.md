@@ -159,8 +159,14 @@ response = sdk.playlist().delete(1);
 ## File Uploads
 
 The SDK supports single-chunk and multi-part uploads to S3 via presigned URLs. Each part is
-sent as a sized body (`Content-Length`, no chunked transfer encoding), one part in memory at a
-time. Parts are uploaded one after the other (the .NET SDK uploads them in parallel).
+streamed from the file as a sized body (`Content-Length`, no chunked transfer encoding), so
+nothing is buffered in memory and parts of any size S3 accepts (up to 5 GiB) work. Parts are
+uploaded one after the other (the .NET SDK uploads them in parallel).
+
+If any part of a multi-part upload fails (a non-2xx response, a transport failure such as
+`SapiConnectionException`, any other exception, or an interrupted thread) the upload is aborted
+with `abortUpload` and the original exception is rethrown. A failing abort never masks it; it is
+added as a suppressed exception.
 
 ```java
 import com.bluebillywig.sapi.types.UploadData;
@@ -190,6 +196,14 @@ lazy: every `next()` waits out the poll interval, polls S3 once and returns the 
 `hasNext()` never blocks and turns `false` after a poll returned `100`. `next()` throws
 `IllegalStateException` when `maxIterations` polls were made without reaching 100 (the .NET
 `InvalidOperationException`). For a single poll use `getUploadProgress(...)`.
+
+The progress is computed from the S3 ListParts response, which is XML
+(`<ListPartsResult><Part>...`); the `Part` elements directly under the root are counted. A JSON
+body (an object with a `Part` array or object) is still accepted. The XML parser refuses a
+`DOCTYPE`, so external entities (XXE) are not possible. `partsCount` must be greater than 0
+(`IllegalArgumentException` otherwise, also for `uploadProgress`); the percentage is clamped to
+0-100 and the iterator ends as soon as it reaches 100, so a part count that is too low cannot
+make it loop forever.
 
 ## Thumbnails
 
@@ -293,10 +307,27 @@ Sdk sdk = Sdk.withRpcTokenAuthentication("my-publication", tokenId, sharedSecret
 The timeout covers the whole exchange, including reading the response body. The SDK waits on
 `HttpClient.sendAsync(...)` to enforce it, so an injected client must implement `sendAsync`.
 The client the SDK creates does not follow redirects, so the RPC token cannot be replayed to
-another origin; configure your own client if you want different behaviour.
+another origin. An injected `HttpClient` must do the same: build it with
+`HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NEVER)` (also the default of
+`HttpClient.newHttpClient()`). The `Sdk` constructor throws `IllegalArgumentException` for a
+client with any other `followRedirects()` setting.
 
 Authentication headers are attached only to same-origin (SAPI) requests; cross-origin URLs
 such as presigned S3 upload and progress URLs never receive the RPC token.
+
+## Releasing
+
+1. Run the **create-release-branch** workflow with the major.minor version (e.g. `1.2`); it
+   creates `release/v1.2` from `master`.
+2. Run **create-release** from that release branch; it creates the GitHub release `vX.Y.Z`
+   (patch auto-incremented, or given).
+3. Publishing the release triggers **publish.yaml**, which sets the version from the tag and
+   uploads the signed artifacts (jar, sources, javadoc) to the Sonatype Central Portal. The
+   deployment is validated but not published automatically.
+4. Release it by hand at <https://central.sonatype.com> (or drop it if something is wrong).
+
+To check the release build locally without signing or deploying:
+`mvn -B -P release -Dgpg.skip=true package`.
 
 ## Development
 

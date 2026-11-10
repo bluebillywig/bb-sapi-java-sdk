@@ -47,7 +47,10 @@ public final class UploadData {
         return chunks;
     }
 
-    /** @param chunks number of parts @return this */
+    /**
+     * @param chunks number of parts
+     * @return this
+     */
     public UploadData setChunks(Integer chunks) {
         this.chunks = chunks;
         return this;
@@ -58,7 +61,10 @@ public final class UploadData {
         return presignedUrls;
     }
 
-    /** @param presignedUrls one presigned URL per part @return this */
+    /**
+     * @param presignedUrls one presigned URL per part
+     * @return this
+     */
     public UploadData setPresignedUrls(List<PresignedUrl> presignedUrls) {
         this.presignedUrls = presignedUrls;
         return this;
@@ -69,7 +75,10 @@ public final class UploadData {
         return key;
     }
 
-    /** @param key s3 object key (multi-part only) @return this */
+    /**
+     * @param key s3 object key (multi-part only)
+     * @return this
+     */
     public UploadData setKey(String key) {
         this.key = key;
         return this;
@@ -80,7 +89,10 @@ public final class UploadData {
         return uploadId;
     }
 
-    /** @param uploadId s3 multi-part upload ID (multi-part only) @return this */
+    /**
+     * @param uploadId s3 multi-part upload ID (multi-part only)
+     * @return this
+     */
     public UploadData setUploadId(String uploadId) {
         this.uploadId = uploadId;
         return this;
@@ -91,7 +103,10 @@ public final class UploadData {
         return listPartsUrl;
     }
 
-    /** @param listPartsUrl s3 URL to list uploaded parts (for progress polling) @return this */
+    /**
+     * @param listPartsUrl s3 URL to list uploaded parts (for progress polling)
+     * @return this
+     */
     public UploadData setListPartsUrl(String listPartsUrl) {
         this.listPartsUrl = listPartsUrl;
         return this;
@@ -102,7 +117,10 @@ public final class UploadData {
         return headObjectUrl;
     }
 
-    /** @param headObjectUrl s3 URL to check whether the object exists (upload complete) @return this */
+    /**
+     * @param headObjectUrl s3 URL to check whether the object exists (upload complete)
+     * @return this
+     */
     public UploadData setHeadObjectUrl(String headObjectUrl) {
         this.headObjectUrl = headObjectUrl;
         return this;
