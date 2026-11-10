@@ -3,15 +3,20 @@ on:
   workflow_dispatch:
     inputs:
       patch:
-        description: "Patch version override (leave empty to auto-increment from latest)"
+        description: "Patch version override (digits; leave empty to auto-increment from latest)"
         required: false
         type: string
+
+# Uses the built-in GITHUB_TOKEN only. A release created with it does not fire the
+# `release: published` event, so this workflow starts publish.yaml explicitly (workflow_dispatch
+# is the one event GITHUB_TOKEN may trigger; it needs actions: write).
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   create-release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Validate branch
         run: |
@@ -28,16 +33,22 @@ jobs:
       - name: Determine version
         id: version
         env:
-          GH_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          PATCH_INPUT: ${{ inputs.patch }}
         run: |
+          set -euo pipefail
           MAJOR_MINOR="${GITHUB_REF_NAME#release/v}"
 
-          if [[ -n "${{ inputs.patch }}" ]]; then
-            PATCH="${{ inputs.patch }}"
+          if [[ -n "$PATCH_INPUT" ]]; then
+            if [[ ! "$PATCH_INPUT" =~ ^[0-9]+$ ]]; then
+              echo "::error::patch must be digits only"
+              exit 1
+            fi
+            PATCH="$PATCH_INPUT"
           else
             # Find the latest patch version for this major.minor
-            LATEST_TAG=$(gh release list --json tagName -q '.[].tagName' \
-              | grep -E "^v${MAJOR_MINOR}\.[0-9]+$" \
+            LATEST_TAG=$(gh release list --limit 1000 --json tagName -q '.[].tagName' \
+              | { grep -E "^v${MAJOR_MINOR}\.[0-9]+$" || true; } \
               | sort -V \
               | tail -n 1)
 
@@ -56,9 +67,16 @@ jobs:
 
       - name: Create GitHub Release
         env:
-          GH_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
         run: |
-          gh release create "${{ steps.version.outputs.tag }}" \
-            --target "${{ github.ref_name }}" \
-            --title "${{ steps.version.outputs.tag }}" \
+          gh release create "$TAG" \
+            --target "$GITHUB_REF_NAME" \
+            --title "$TAG" \
             --generate-notes
+
+      - name: Start the Maven Central publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: gh workflow run publish.yaml --ref master -f tag="$TAG"

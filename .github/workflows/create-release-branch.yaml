@@ -7,14 +7,20 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: write
+
 jobs:
   create-release-branch:
     runs-on: ubuntu-latest
     steps:
+      # Inputs go through env, never straight into the script.
       - name: Validate version format
+        env:
+          VERSION_INPUT: ${{ inputs.version }}
         run: |
-          if [[ ! "${{ inputs.version }}" =~ ^[0-9]+\.[0-9]+$ ]]; then
-            echo "::error::Invalid version format '${{ inputs.version }}'. Expected major.minor (e.g. 1.2)"
+          if [[ ! "$VERSION_INPUT" =~ ^[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Invalid version format. Expected major.minor (e.g. 1.2)"
             exit 1
           fi
 
@@ -24,6 +30,8 @@ jobs:
           ref: master
 
       - name: Create release branch
+        env:
+          VERSION_INPUT: ${{ inputs.version }}
         run: |
-          git checkout -b "release/v${{ inputs.version }}"
-          git push origin "release/v${{ inputs.version }}"
+          git checkout -b "release/v${VERSION_INPUT}"
+          git push origin "release/v${VERSION_INPUT}"
