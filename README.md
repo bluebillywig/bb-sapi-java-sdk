@@ -21,14 +21,14 @@ virtual threads if you need concurrency. An `Sdk` instance is thread-safe and me
 <dependency>
   <groupId>com.bluebillywig</groupId>
   <artifactId>bb-sapi-java-sdk</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
 Gradle:
 
 ```groovy
-implementation 'com.bluebillywig:bb-sapi-java-sdk:1.0.0'
+implementation 'com.bluebillywig:bb-sapi-java-sdk:1.0.1'
 ```
 
 ## Quick Start
