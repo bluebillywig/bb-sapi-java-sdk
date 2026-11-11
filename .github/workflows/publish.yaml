@@ -11,8 +11,8 @@ on:
         required: true
         type: string
 
-# Secrets on this repo (create them with scripts/set-release-secrets.sh):
-#   MAVEN_CENTRAL_USERNAME / MAVEN_CENTRAL_PASSWORD  Central Portal user token
+# Secrets (the Central token is org-level; the two GPG ones are set on this repo with scripts/set-release-secrets.sh):
+#   GRADLE_MAVEN_USERNAME / GRADLE_MAVEN_PASSWORD    Central Portal user token (org-level, shared with the Android SDK)
 #   MAVEN_GPG_PRIVATE_KEY                            ASCII-armored GPG private key
 #   MAVEN_GPG_PASSPHRASE                             its passphrase
 
@@ -57,8 +57,8 @@ jobs:
 
       - name: Build, sign and upload to the Central Portal
         env:
-          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.GRADLE_MAVEN_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.GRADLE_MAVEN_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
         run: mvn -B -P release deploy
 
