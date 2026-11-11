@@ -155,6 +155,7 @@
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>central</publishingServerId>
+              <deploymentName>${project.artifactId}-${project.version}</deploymentName>
               <!-- Like the Android SDK: the deployment is validated on the portal and then
                    released by hand at central.sonatype.com, so a bad release can be dropped. -->
               <autoPublish>false</autoPublish>
